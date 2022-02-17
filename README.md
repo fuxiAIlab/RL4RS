@@ -43,7 +43,7 @@ Resource Page: https://fuxi-up-research.gitbook.io/fuxi-up-challenges/
 ### :beginner: Easy-To-Use scaleable API
 - **low coupling structure**: RL4RS specifies a fixed data format to reduce code coupling. And the data-related logics are unified into data preprocessing scripts or user-defined state classes.
 - **file-based RL environment**: RL4RS implements a file-based gym environment, which enables random sampling and sequential access to datasets exceeding memory size. It is easy to extend it to distributed file systems.
-- **http-based vector Env**: RL4RS naturally supports Vector Env, that is, the environment processes batch data at one time. We further encapsulate the env through the HTTP interface, so that it can be deployed on multiple CPU servers to accelerate the generation of samples.
+- **http-based vector Env**: RL4RS naturally supports Vector Env, that is, the environment processes batch data at one time. We further encapsulate the env through the HTTP interface, so that it can be deployed on multiple servers to accelerate the generation of samples.
        
 ## experimental features (welcome contributions!)
 - A new dataset for bundle recommendation with variable discounts, flexible recommendation trigger, and modifiable item content is in prepare.
