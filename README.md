@@ -61,7 +61,7 @@ RL4RS supports Linux, at least 64 GB Mem !!
 ### Github (recommended)
 ```
 $ git clone https://github.com/fuxiAIlab/RL4RS
-$ export PYTHONPATH=$PYTHONPATH:./rl4rs
+$ export PYTHONPATH=$PYTHONPATH:`pwd`/rl4rs
 $ conda env create -f environment.yml
 $ conda activate rl4rs
 ```
