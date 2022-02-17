@@ -15,7 +15,7 @@ awk -F "@" '$2%11<2 {print}' ${file} > ${rl4rs_output_dir}/${file}_0000.csv &&
 awk -F "@" '$2%11>=2 && $2%11<4 {print}' ${file} > ${rl4rs_output_dir}/${file}_0001.csv &&
 awk -F "@" '$2%11>=4 && $2%11<6 {print}' ${file} > ${rl4rs_output_dir}/${file}_0002.csv &&
 awk -F "@" '$2%11>=6 && $2%11<8 {print}' ${file} > ${rl4rs_output_dir}/${file}_0003.csv &&
-awk -F "@" '$2%11>=8 {print}' ${file} > ${rl4rs_output_dir}/${file}_0004.csv &&
+awk -F "@" '$2%11>=8 {print}' ${file} > ${rl4rs_output_dir}/${file}_0004.csv
 
 #file_rows=`wc -l ${file}|awk '{print $1}'`
 #file_num=5
