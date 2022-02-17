@@ -21,7 +21,7 @@ for i in range(epoch):
 ```
 Dataset Download: https://drive.google.com/file/d/1YbPtPyYrMvMGOuqD4oHvK0epDtEhEb9v/view?usp=sharing
 
-Paper: https://arxiv.org/pdf/2110.11073.pdf 
+Paper: https://arxiv.org/pdf/2110.11073v3.pdf
 
 Kaggle Competition (old version): https://www.kaggle.com/c/bigdata2021-rl-recsys/overview
 
@@ -239,7 +239,7 @@ Please contact us by email.
 ```
 @article{2021RL4RS,
 title={RL4RS: A Real-World Benchmark for Reinforcement Learning based Recommender System},
-author={ Kai Wang and Zhene Zou and Qilin Deng and Yue Shang and Minghao Zhao and Runze Wu and Xudong Shen and Tangjie Lyu and Changjie Fan},
+author={ Kai Wang and Zhene Zou and Yue Shang and Qilin Deng and Minghao Zhao and Runze Wu and Xudong Shen and Tangjie Lyu and Changjie Fan},
 journal={ArXiv},
 year={2021},
 volume={abs/2110.11073}
