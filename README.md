@@ -125,7 +125,8 @@ Dataset Download: https://drive.google.com/file/d/1YbPtPyYrMvMGOuqD4oHvK0epDtEhE
 cd reproductions/
 # run exact-k
 bash run_exact_k.sh
-# run RLlib library
+# start http-based Env, then run RLlib library
+nohup python -u gymHttpServer.py &
 bash run_modelfree_rl.sh DQN/PPO/DDPG/PG/PG_conti/etc.
 ```
 
@@ -146,7 +147,8 @@ bash run_simulator_train.sh dien
 # model-free part (need run_simulator_train.sh)
 # run exact-k
 bash run_exact_k.sh
-# run RLlib library
+# start http-based Env, then run RLlib library
+nohup python -u rl4rs/server/gymHttpServer.py &
 bash run_modelfree_rl.sh DQN/PPO/DDPG/PG/PG_conti/etc.
 
 # offline RL part (need run_simulator_train.sh)
