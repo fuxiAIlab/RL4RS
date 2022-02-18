@@ -126,7 +126,7 @@ cd reproductions/
 # run exact-k
 bash run_exact_k.sh
 # start http-based Env, then run RLlib library
-nohup python -u gymHttpServer.py &
+nohup python -u rl4rs/server/gymHttpServer.py &
 bash run_modelfree_rl.sh DQN/PPO/DDPG/PG/PG_conti/etc.
 ```
 
