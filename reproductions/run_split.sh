@@ -6,6 +6,7 @@ rl4rs_benchmark_dir=$(dirname $script_abs)/..
 rl4rs_dataset_dir=${rl4rs_benchmark_dir}/dataset
 script_dir=${rl4rs_benchmark_dir}/script
 rl4rs_output_dir=${rl4rs_benchmark_dir}/output
+mkdir $rl4rs_output_dir
 export rl4rs_benchmark_dir && export rl4rs_output_dir && export rl4rs_dataset_dir
 
 cd $rl4rs_dataset_dir

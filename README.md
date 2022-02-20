@@ -21,7 +21,7 @@ for i in range(epoch):
 ```
 Dataset Download: https://drive.google.com/file/d/1YbPtPyYrMvMGOuqD4oHvK0epDtEhEb9v/view?usp=sharing
 
-Paper: https://arxiv.org/pdf/2110.11073v3.pdf
+Paper: https://arxiv.org/pdf/2110.11073.pdf
 
 Kaggle Competition (old version): https://www.kaggle.com/c/bigdata2021-rl-recsys/overview
 
