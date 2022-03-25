@@ -9,7 +9,7 @@ export rl4rs_benchmark_dir && export rl4rs_output_dir && export rl4rs_dataset_di
 
 file=$1
 
-cd ${rl4rs_dataset_dir}
+cd ${rl4rs_dataset_dir} &&
 
 awk -F "@" '$2%11<2 {print}' ${file} > ${rl4rs_output_dir}/${file}_0000.csv &&
 awk -F "@" '$2%11>=2 && $2%11<4 {print}' ${file} > ${rl4rs_output_dir}/${file}_0001.csv &&
