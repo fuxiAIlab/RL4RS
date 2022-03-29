@@ -12,6 +12,7 @@ from rl4rs.nets.cql.encoder import CustomVectorEncoderFactory
 from rl4rs.nets.cql.q_function import CustomMeanQFunctionFactory
 from script.offline_evaluation import ope_eval
 from rl4rs.policy.behavior_model import behavior_model
+from rl4rs.policy.policy_model import policy_model
 
 algo = sys.argv[1]
 stage = sys.argv[2]
