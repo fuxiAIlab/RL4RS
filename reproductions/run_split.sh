@@ -11,13 +11,13 @@ export rl4rs_benchmark_dir && export rl4rs_output_dir && export rl4rs_dataset_di
 
 cd $rl4rs_dataset_dir
 
-#原始数据集
+#raw dataset
 awk -F "@" 'NR>1 {print}' rl4rs_dataset_a_sl.csv > rl4rs_dataset_a.csv &&
 awk -F "@" 'NR>1 {print}' rl4rs_dataset_a_rl.csv >> rl4rs_dataset_a.csv &&
 awk -F "@" 'NR>1 {print}' rl4rs_dataset_b_sl.csv > rl4rs_dataset_b.csv &&
 awk -F "@" 'NR>1 {print}' rl4rs_dataset_b_rl.csv >> rl4rs_dataset_b.csv &&
 
-#训练集测试集划分
+#train/test split
 awk -F "@" 'NR>1 && $2%10<=5 {print}' rl4rs_dataset_a_sl.csv > rl4rs_dataset_a_sl_train.csv &&
 awk -F "@" 'NR>1 && $2%10>=6 {print}' rl4rs_dataset_a_sl.csv > rl4rs_dataset_a_sl_test.csv &&
 awk -F "@" 'NR>1 && $2%10<=5 {print}' rl4rs_dataset_a_rl.csv > rl4rs_dataset_a_rl_train.csv &&
@@ -43,7 +43,7 @@ cat rl4rs_dataset_a_test.csv >> rl4rs_dataset_a.csv &&
 cat rl4rs_dataset_b_train.csv > rl4rs_dataset_b.csv &&
 cat rl4rs_dataset_b_test.csv >> rl4rs_dataset_b.csv  &&
 
-#生成dataset_b
+#dataset_b
 cd ${script_dir}  &&
 python data_preprocess.py "${rl4rs_dataset_dir}/rl4rs_dataset_b_sl.csv" "${rl4rs_dataset_dir}/rl4rs_dataset_b2_sl.csv" "data_augment" &&
 python data_preprocess.py "${rl4rs_dataset_dir}/rl4rs_dataset_b_rl.csv" "${rl4rs_dataset_dir}/rl4rs_dataset_b2_rl.csv" "data_augment" &&
