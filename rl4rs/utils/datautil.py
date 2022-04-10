@@ -19,9 +19,9 @@ class FeatureUtil(object):
 
     @classmethod
     def record_split(cls, record):
-        role_id, sess_id, sequence_id, exposed_items, user_feedback, \
+        timestamp, sess_id, sequence_id, exposed_items, user_feedback, \
             user_seqfeature, user_protrait, item_feature, behavior_id = record.split('@')
-        return int(role_id), \
+        return int(timestamp), \
                int(sess_id), \
                int(sequence_id), \
                list(map(int, exposed_items.split(','))), \
