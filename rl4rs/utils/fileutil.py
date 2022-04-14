@@ -20,4 +20,4 @@ def find_newest_files(pattern, search_path, pathsep=os.pathsep):
     if len(files) > 0:
         return files[np.argmax(timestamps)]
     else:
-        return files
+        return ''
