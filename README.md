@@ -19,7 +19,8 @@ for i in range(epoch):
         if done[0]:
             break
 ```
-Dataset Download: https://drive.google.com/file/d/1YbPtPyYrMvMGOuqD4oHvK0epDtEhEb9v/view?usp=sharing
+Dataset Download(only data): https://zenodo.org/record/6622390#.YqBBpRNBxQK
+Dataset Download(for reproduction): https://drive.google.com/file/d/1YbPtPyYrMvMGOuqD4oHvK0epDtEhEb9v/view?usp=sharing
 
 Paper: https://arxiv.org/pdf/2110.11073.pdf
 
