@@ -2,6 +2,7 @@ import os
 import numpy as np
 import gym
 import ray
+from copy import deepcopy
 from ray.rllib.models import ModelCatalog
 from ray.tune.registry import register_env
 from rl4rs.env.slate import SlateRecEnv, SlateState
@@ -36,17 +37,24 @@ config = {"epoch": 10000, "maxlen": 64, "batch_size": 64, "action_size": 284, "c
           "remote_base": 'http://127.0.0.1:16773', 'env': "SlateRecEnv-v0"}
 
 config = dict(config, **extra_config)
+eval_config = deepcopy(config)
 
 if config['env'] == 'SeqSlateRecEnv-v0':
-    config['max_steps'] = 36
-    config['batch_size'] = config['batch_size'] // 4
+    eval_config['max_steps'] = config['max_steps'] = 36
+    eval_config['batch_size'] = config['batch_size'] = config['batch_size'] // 4
 
-if algo == "DDPG" or 'conti' in algo:
-    config['support_conti_env'] = True
-    config['support_rllib_mask'] = False
+if "DDPG" in algo or "TD3" in algo or 'conti' in algo:
+    eval_config['support_conti_env'] = config['support_conti_env'] = True
+    eval_config['support_rllib_mask'] = config['support_rllib_mask'] = False
+
+if 'RAINBOW' in algo:
+    eval_config['support_rllib_mask'] = config['support_rllib_mask'] = False
+    eval_config['support_onehot_action'] = True
+    eval_config['support_conti_env'] = True
 
 if 'rawstate' in algo:
-    config['rawstate_as_obs'] = True
+    eval_config['rawstate_as_obs'] = config['rawstate_as_obs'] = True
+
 
 print(extra_config, config)
 
@@ -81,6 +89,20 @@ if algo == "DDPG" or algo == "DDPG_rawstate":
             "model": {
                 "custom_model": "model_rawstate",
             }})
+if algo == "TD3" or algo == "TD3_rawstate":
+    assert config['support_conti_env'] == True
+    cfg = {
+        "exploration_config": {
+            "type": "OrnsteinUhlenbeckNoise",
+            "random_timesteps":10000
+        },
+    }
+    if 'rawstate' in algo or config.get('rawstate_as_obs', False):
+        cfg = dict({
+            **cfg,
+            "model": {
+                "custom_model": "model_rawstate",
+            }})
 elif algo == "DQN" or algo == "DQN_rawstate":
     cfg = {
         # TODO(ekl) we need to set these to prevent the masked values
@@ -102,6 +124,51 @@ elif algo == "DQN" or algo == "DQN_rawstate":
         "model": {
             "custom_model": "mask_model",
         },
+    }
+    if 'rawstate' in algo or config.get('rawstate_as_obs', False):
+        cfg = dict({
+            **cfg,
+            "model": {
+                "custom_model": "mask_model_rawstate",
+            }})
+elif algo == "SLATEQ" or algo == "SLATEQ_rawstate":
+    cfg = {
+        "model": {
+            "custom_model": "mask_model",
+        },
+    }
+    if 'rawstate' in algo or config.get('rawstate_as_obs', False):
+        cfg = dict({
+            **cfg,
+            "model": {
+                "custom_model": "mask_model_rawstate",
+            }})
+elif algo == "RAINBOW" or algo == "RAINBOW_rawstate":
+    # note that DistributionalQModel will make action masking not work
+    cfg = {
+        # TODO(ekl) we need to set these to prevent the masked values
+        # from being further processed in DistributionalQModel, which
+        # would mess up the masking. It is possible to support these if we
+        # defined a custom DistributionalQModel that is aware of masking.
+        "hiddens": [128],
+        "noisy": False,
+        "num_atoms":8,
+        # "dueling": True,
+        # Whether to use double dqn
+        # "double_q": True,
+        # N-step Q learning
+        "n_step": 3,
+        # "target_network_update_freq": 200,
+        "v_min": 0.0,
+        "v_max": 1000.0,
+        # === Replay buffer ===
+        # Size of the replay buffer in batches (not timesteps!).
+        "buffer_size": 100000,
+        # 'rollout_fragment_length': 200,
+        # "num_workers": 0,
+        # "model": {
+        #     "custom_model": "mask_model",
+        # },
     }
     if 'rawstate' in algo or config.get('rawstate_as_obs', False):
         cfg = dict({
@@ -335,7 +402,7 @@ rllib_config = dict(
         },
         "num_gpus": 1 if config.get('gpu', True) else 0,
         "num_workers": 0,
-        "framework": 'tf',
+        "framework": 'tf' if 'SLATEQ' not in algo else 'torch',
         # "framework": 'tfe',
         "rollout_fragment_length": config['max_steps'],
         "batch_mode": "complete_episodes",
@@ -352,10 +419,15 @@ print('rllib_config', rllib_config)
 trainer = get_rl_model(algo.split('_')[0], rllib_config)
 
 if stage == 'train':
-    # trainer.restore(restore_file)
-    # print('model restore from %s' % (restore_file))
+    try:
+        trainer.restore(restore_file)
+        print('model restore from %s' % (restore_file))
+    except Exception:
+        trainer = get_rl_model(algo.split('_')[0], rllib_config)
     for i in range(config["epoch"]):
         result = trainer.train()
+        if (i + 1) % 50 == 0:
+            print('epoch ',i)
         if (i + 1) % 500 == 0 or i == 0:
             print(pretty_print(result))
         if (i + 1) % 500 == 0:
@@ -386,6 +458,42 @@ if stage == 'eval':
             actions.append(action)
     print('avg reward', episode_reward / eval_config['batch_size'] / epoch)
     eval_env.close()
+
+
+if stage == 'eval_v2':
+    # eval_config["epoch"] = 1
+    eval_config['is_eval'] = True
+    eval_config["batch_size"] = 2048
+    if config['env'] == 'SeqSlateRecEnv-v0':
+        config['max_steps'] = 36
+        sim = SeqSlateRecEnv(eval_config, state_cls=SeqSlateState)
+        eval_env = gym.make('SeqSlateRecEnv-v0', recsim=sim)
+    else:
+        sim = SlateRecEnv(eval_config, state_cls=SlateState)
+        eval_env = gym.make('SlateRecEnv-v0', recsim=sim)
+    # trainer.restore(checkpoint_dir + '/checkpoint_010000/checkpoint-10000')
+    trainer.restore(restore_file)
+    print('model restore from %s' % (restore_file))
+    from rl4rs.policy.policy_model import policy_model
+    policy = policy_model(trainer, config)
+    episode_reward = 0
+    done = False
+    epoch = 4
+    actions = []
+    for i in range(epoch):
+        obs = eval_env.reset()
+        print('test batch at ', i, 'avg reward', episode_reward / eval_config['batch_size'] / (i + 0.0001))
+        for _ in range(config["max_steps"]):
+            if config.get('support_onehot_action', False):
+                action = policy.predict_with_mask(obs)
+            else:
+                action = np.array(policy.action_probs(obs))
+            obs, reward, done, info = eval_env.step(action)
+            episode_reward += sum(reward)
+            actions.append(action)
+    print('avg reward', episode_reward / eval_config['batch_size'] / epoch)
+    eval_env.close()
+
 
 if stage == 'ope':
     dataset_dir = os.environ['rl4rs_dataset_dir']

@@ -8,13 +8,16 @@ from scipy.special import softmax
 class policy_model(object):
     def __init__(self, model, config = {}):
         self.policy = model
+        self.config = config
         self.page_items = int(config.get('page_items', 9))
         self.mask_size = self.page_items+1
         self.location_mask = config.get('location_mask', None)
         self.special_items = config.get('special_items', None)
 
     def predict_with_mask(self, obs):
-        if isinstance(self.policy, d3rlpy.algos.AlgoBase):
+        if self.config.get("support_conti_env",False):
+            return self.predict(obs)
+        elif isinstance(self.policy, d3rlpy.algos.AlgoBase):
             obs = np.array(obs)
             action_probs = np.array(self.action_probs(obs))
             batch_size = len(obs)

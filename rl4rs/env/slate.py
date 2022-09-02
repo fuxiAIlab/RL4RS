@@ -19,6 +19,10 @@ class SlateState(RecState):
         self.cur_steps = 0
         iteminfo_file = config["iteminfo_file"]
         self.item_info_d, self.action_emb = self.get_iteminfo_from_file(iteminfo_file, self.action_size)
+        if config.get('support_onehot_action', False):
+            config['action_emb_size'] = self.action_size
+            self.action_emb_size = self.action_size
+            self.action_emb = np.eye(self.action_size)
         self.location_mask, self.special_items = self.get_mask_from_file(iteminfo_file, self.action_size)
 
     @staticmethod
@@ -146,9 +150,15 @@ class SlateState(RecState):
     def offline_action(self):
         cur_step = self.cur_steps
         if cur_step < self.max_steps:
-            action = [int(x.split('@')[3].split(',')[cur_step]) for x in self.records]
+            if self.config.get("support_conti_env", False):
+                action = [self.action_emb[int(x.split('@')[3].split(',')[cur_step])] for x in self.records]
+            else:
+                action = [int(x.split('@')[3].split(',')[cur_step]) for x in self.records]
         else:
-            action = [0, ] * self.batch_size
+            if self.config.get("support_conti_env", False):
+                action = [self.action_emb[0], ] * self.batch_size
+            else:
+                action = [0, ] * self.batch_size
         return action
 
     @property
@@ -290,8 +300,9 @@ class SlateRecEnv(RecSimBase):
                 [samples.info[i].update({'click_p': probs[i]})
                  for i in range(len(probs))]
             reward = np.sum(price * probs, axis=1)
-            if self.config.get("support_rllib_mask", False) or \
-                    self.config.get("support_d3rl_mask", False):
+            if 1:
+            # if self.config.get("support_rllib_mask", False) or \
+            #         self.config.get("support_d3rl_mask", False):
                 violation = samples.get_violation()
                 reward[violation < 0.5] = 0
         return reward.tolist()

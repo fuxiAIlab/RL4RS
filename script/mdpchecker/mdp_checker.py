@@ -3,11 +3,13 @@ import sys
 import random
 from scipy.stats import spearmanr
 from keras_transformer import get_model, decode
-from rl4rs.tool.decoder import beam_search, token_probs
+from rl4rs.mdpchecker.decoder import beam_search, token_probs
 
 # dataset_file = 'recsys15.csv'
 # dataset_file = 'movielens.csv'
 # dataset_file = 'rl4rs.csv'
+# dataset_file = 'lastfm.csv'
+# dataset_file = 'cikm2016.csv'
 dataset_file = sys.argv[1] + '.csv'
 dataset_dir = sys.argv[2]
 
@@ -16,6 +18,8 @@ dataset_dir = sys.argv[2]
 # increase the sample size
 if 'recsys15' in dataset_file:
     source_len = 8
+elif 'cikm2016' in dataset_file:
+    source_len = 5
 else:
     source_len = 16
 target_len = 5
@@ -28,16 +32,19 @@ target_tokens = []
 for sample in data:
     user_id, items = sample.split(' ')
     item_list = items.split(',')
-    assert len(item_list) >= source_len + target_len
-    i = 0
-    if 'rl4rs' in dataset_file:
-        source_tokens.append(item_list[:source_len])
-        target_tokens.append(item_list[source_len:source_len + target_len])
+    if len(item_list) >= source_len + target_len:
+        # assert len(item_list) >= source_len + target_len
+        i = 0
+        if 'rl4rs' in dataset_file or 'cikm2016' in dataset_file:
+            source_tokens.append(item_list[:source_len])
+            target_tokens.append(item_list[source_len:source_len + target_len])
+        else:
+            while i + source_len + target_len < len(item_list):
+                source_tokens.append(item_list[i: i + source_len])
+                target_tokens.append(item_list[i + source_len: i + source_len + target_len])
+                i = i + np.random.randint(source_len, source_len + target_len) // 6
     else:
-        while i + source_len + target_len < len(item_list):
-            source_tokens.append(item_list[i: i + source_len])
-            target_tokens.append(item_list[i + source_len: i + source_len + target_len])
-            i = i + np.random.randint(source_len, source_len + target_len) // 6
+        print('len(item_list) <= source_len + target_len in', '\t',sample)
 
 # Generate dictionaries
 token_dict = {
@@ -128,6 +135,8 @@ batch_size = 2048
 beam_size = 100
 # use 20 hot items since rl4rs has only 200+ items
 hot_beam_size = 20 if 'rl4rs' in dataset_file else beam_size
+# cikm2016 has only 60853 items
+candidates_size = 6000 if 'cikm2016' in dataset_file else hot_beam_size
 random.seed(1)
 encode_input = random.sample(encode_input[-10000:], batch_size)
 output_greedy, greedy_score = beam_search(model, encode_input, beam_size=1, target_len=target_len)
@@ -139,7 +148,7 @@ output_topk, beam_score = beam_search(model, encode_input, beam_size=beam_size, 
 
 output_topk_5, beam_score_5 = output_topk[:, :int(beam_size * 0.05)], beam_score[:, :int(beam_size * 0.05)]
 output_topk_20, beam_score_20 = output_topk[:, :int(beam_size * 0.2)], beam_score[:, :int(beam_size * 0.2)]
-output_topk_hot, beam_score_hot = beam_search(model, encode_input, beam_size=hot_beam_size, target_len=target_len, use_candidates=True)
+output_topk_hot, beam_score_hot = beam_search(model, encode_input, beam_size=hot_beam_size, target_len=target_len, use_candidates=True, candidates_size=candidates_size)
 output_topk_hot5, beam_score_hot5 = output_topk_hot[:, :int(beam_size * 0.05)], beam_score_hot[:, :int(beam_size * 0.05)]
 output_topk_hot20, beam_score_hot20 = output_topk_hot[:, :int(beam_size * 0.2)], beam_score_hot[:, :int(beam_size * 0.2)]
 

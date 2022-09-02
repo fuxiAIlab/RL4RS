@@ -5,6 +5,7 @@ import uuid
 import gym
 import numpy as np
 import six
+import time
 import argparse
 import sys
 import json
@@ -37,6 +38,7 @@ class Envs(object):
     def __init__(self):
         self.envs = {}
         self.id_len = 8
+        self.env_lasttime = {}
 
     def _lookup_env(self, instance_id):
         try:
@@ -51,6 +53,13 @@ class Envs(object):
             raise InvalidUsage('Instance_id {} unknown'.format(instance_id))
 
     def create(self, env_id, config={}, seed=None):
+        instance_ids = list(self.list_all().keys())
+        print('list all envs ', instance_ids)
+        for instance_id in instance_ids[:-2]:
+            active_time = self.env_lasttime.get(instance_id, 0)
+            if abs(time.time()-active_time)>=300:
+                self.env_close(instance_id)
+                print('env_close envs ', instance_id)
         try:
             if env_id == 'SlateRecEnv-v0':
                 config['gpu'] = False
@@ -64,11 +73,14 @@ class Envs(object):
                 env = gym.make(env_id)
             if seed:
                 env.seed(seed)
+
         except gym.error.Error:
             raise InvalidUsage("Attempted to look up malformed environment ID '{}'".format(env_id))
 
         instance_id = str(uuid.uuid4().hex)[:self.id_len]
         self.envs[instance_id] = env
+        self.env_lasttime[instance_id] = time.time()
+        # assert len(list(self.list_all().keys())) <= 3
         return instance_id
 
     def list_all(self):
@@ -80,6 +92,7 @@ class Envs(object):
         return env.observation_space.to_jsonable(obs)
 
     def step(self, instance_id, action, render):
+        self.env_lasttime[instance_id] = time.time()
         env = self._lookup_env(instance_id)
         if isinstance(action, six.integer_types):
             nice_action = action

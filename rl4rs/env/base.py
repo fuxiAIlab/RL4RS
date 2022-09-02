@@ -207,10 +207,10 @@ class RecEnvBase(gym.Env):
                 action_feature_size = len(self.obs[0]['action_mask'])
                 self.observation_space = gym.spaces.Dict({
                     "action_mask": gym.spaces.Box(0, 1, shape=(action_feature_size,)),
-                    "obs": gym.spaces.Box(-1000.0, 1000.0, shape=(len(self.obs[0]["obs"]),))
+                    "obs": gym.spaces.Box(-100000.0, 100000.0, shape=(len(self.obs[0]["obs"]),))
                 })
             else:
-                self.observation_space = gym.spaces.Box(-1000.0, 1000.0, shape=(len(self.obs[0]),))
+                self.observation_space = gym.spaces.Box(-100000.0, 100000.0, shape=(len(self.obs[0]),))
         if self.config.get("support_conti_env", False):
             self.action_space = gym.spaces.Box(-1, 1, shape=(self.config['action_emb_size'],))
         else:
