@@ -34,7 +34,7 @@ Resource Page: https://fuxi-up-research.gitbook.io/fuxi-up-challenges/
 
 **08/28/2022**: NeurIPS 2022 Track Datasets and Benchmarks, [Under Review](https://openreview.net/forum?id=euli0I5CKvy).
 
-**09/17/2021**: A hand-on Invited talk at [DRL4IR Workshop](https://drl4ir.github.io/), SIGIR2022.
+**09/17/2022**: A hand-on Invited talk at [DRL4IR Workshop](https://drl4ir.github.io/), SIGIR2022.
 
 **12/17/2021**: Hosting [IEEE BigData2021 Cup](http://bigdataieee.org/BigData2021/BigDataCupChallenges.html) Challenges, [Track I](https://www.kaggle.com/c/bigdata2021-rl-recsys/overview) for Supervised Learning and [Track II](https://fuxi-up-research.gitbook.io/fuxi-up-challenges/challenge/bigdatacup2021-rl4rs-challenge) for Reinforcement Learning.
 
