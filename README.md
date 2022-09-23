@@ -25,6 +25,10 @@ Dataset Download(for reproduction): https://drive.google.com/file/d/1YbPtPyYrMvM
 
 Paper: https://arxiv.org/pdf/2110.11073.pdf
 
+Paper_latest: https://openreview.net/pdf?id=euli0I5CKvy
+
+Appendix: https://openreview.net/attachment?id=euli0I5CKvy&name=supplementary_material
+
 Kaggle Competition (old version): https://www.kaggle.com/c/bigdata2021-rl-recsys/overview
 
 Resource Page: https://fuxi-up-research.gitbook.io/fuxi-up-challenges/
