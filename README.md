@@ -25,7 +25,7 @@ Dataset Download(for reproduction): https://drive.google.com/file/d/1YbPtPyYrMvM
 
 Paper: https://arxiv.org/pdf/2110.11073.pdf
 
-Paper_latest: https://openreview.net/pdf?id=euli0I5CKvy
+<!--Paper_latest: https://openreview.net/pdf?id=euli0I5CKvy-->
 
 Appendix: https://github.com/fuxiAIlab/RL4RS/blob/main/rl4rs_a_real_world_benchmark_d-Supplementary%20Material.pdf
 
@@ -36,7 +36,7 @@ Resource Page: https://fuxi-up-research.gitbook.io/fuxi-up-challenges/
 ## RL4RS News
 ![new](/assets/new.gif) **09/02/2022**: We release RL4RS [v1.1.0](https://github.com/fuxiAIlab/RL4RS/releases/tag/v1.1.0). 1) two additional RS datasets for comparison, Last.fm and CIKMCup2016; 2) two additional model-free baselines, TD3 and RAINBOW, and two additional model-based batch RL baselines, MOPO (Model-based Offline Policy Optimization) and COMBO(Conservative Offline Model-Based Policy Optimization). 3) BCQ and CQL support continuous action spaces. 
 
-**08/28/2022**: NeurIPS 2022 Track Datasets and Benchmarks, [Under Review](https://openreview.net/forum?id=euli0I5CKvy).
+<!--**08/28/2022**: NeurIPS 2022 Track Datasets and Benchmarks, [Under Review](https://openreview.net/forum?id=euli0I5CKvy).-->
 
 **09/17/2022**: A hand-on Invited talk at [DRL4IR Workshop](https://drl4ir.github.io/), SIGIR2022.
 
