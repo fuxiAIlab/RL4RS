@@ -27,7 +27,7 @@ Paper: https://arxiv.org/pdf/2110.11073.pdf
 
 <!--Paper_latest: https://openreview.net/pdf?id=euli0I5CKvy-->
 
-Appendix: https://github.com/fuxiAIlab/RL4RS/blob/main/rl4rs_a_real_world_benchmark_d-Supplementary%20Material.pdf
+Appendix: https://github.com/fuxiAIlab/RL4RS/blob/main/RL4RS_appendix.pdf
 
 Kaggle Competition (old version): https://www.kaggle.com/c/bigdata2021-rl-recsys/overview
 
