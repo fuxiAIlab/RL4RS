@@ -33,6 +33,8 @@ Kaggle Competition (old version): https://www.kaggle.com/c/bigdata2021-rl-recsys
 
 Resource Page: https://fuxi-up-research.gitbook.io/fuxi-up-challenges/
 
+Tutorial: https://github.com/fuxiAIlab/RL4RS/blob/main/tutorial.ipynb
+
 ## RL4RS News
 ![new](/assets/new.gif) **04/20/2023**: SIGIR 2023 Resource Track, [Accept].
 
